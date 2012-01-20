@@ -8,6 +8,6 @@ require 'ltx'
 #...
 
 #TEST
-cmd = Ltx::Commands::PdflatexCommand.new("test")
-cmd.execute
-puts cmd.rerun_needed?
+latex = Ltx::Generators::PdflatexGenerator.new("test")
+last_step = latex.generate
+puts last_step.generation
