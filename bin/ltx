@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+#add lib to load path
+lib = File.expand_path(File.dirname(__FILE__) + '/../lib')
+$LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
+
+require 'ltx'
+#...
+
+#TEST
+cmd = Ltx::Commands::PdflatexCommand.new("test")
+cmd.execute
+puts cmd.rerun_needed?
