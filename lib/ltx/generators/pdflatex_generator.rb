@@ -5,7 +5,7 @@ module Ltx::Generators
 	class PdflatexGenerator
 		def initialize(document)
 			@document = document
-			@modules = [Ltx::Modules::MakeglossariesModule.new]
+			@modules = [Ltx::Modules::MakeglossariesModule.new(document)]
 		end
 		
 		def generate

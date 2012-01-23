@@ -10,4 +10,4 @@ require 'ltx'
 #TEST
 latex = Ltx::Generators::PdflatexGenerator.new("test")
 last_step = latex.generate
-puts last_step.generation
+last_step.generation

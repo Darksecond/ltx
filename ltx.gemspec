@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Tim Peters"]
   s.email       = ["mail@darksecond.nl"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary} #a few words
-  s.description = %q{TODO: Write a gem description} #longer description
+  s.summary     = %q{LaTeX dependency resolver and compiler} #a few words
+  s.description = %q{a LaTeX dependency resolver and compiler, it will compile makeglossaries and biber as well} #longer description
 
   s.rubyforge_project = "ltx"
 
