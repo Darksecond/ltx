@@ -5,7 +5,7 @@ module Ltx::Commands
 		PDFLATEX_COMMAND = "pdflatex"
 
 		def initialize(document)
-			throw "no document specified" unless document
+			raise "no document specified" unless document
 			#check if document exists
 
 			@document = document
