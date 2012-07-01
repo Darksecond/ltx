@@ -41,7 +41,7 @@ module Ltx
 		end
 
 		def inspect
-			"[@primary => #{primary.inspect}, @type => #{type.inspect}, @secondaries => #{secondaries.inspect}]"
+			"<@primary => #{primary.inspect}, @type => #{type.inspect}, @secondaries => #{secondaries.inspect}>"
 		end
 
 		def ==(other)

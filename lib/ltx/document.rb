@@ -8,11 +8,12 @@ module Ltx
 		
 		def initialize(primary)
 			raise "primary can't be nil" if primary.nil?
-			rescan primary
+			@primary = Source.new primary
+			rescan 
 		end
 
-		def rescan(primary)
-			@primary = Source.new primary
+		def rescan
+			@primary.rescan # i know, double work...
 			@secondaries = find_secondaries
 		end
 
@@ -25,7 +26,7 @@ module Ltx
 		end
 
 		def base
-			primary.chomp ".tex"
+			primary.base
 		end
 
 		def basedir
@@ -33,7 +34,7 @@ module Ltx
 		end
 
 		def find_by_type(type)
-			([primary.secondary(type)] + secondaries.map { |sec| sec.secondary(type) }).compact
+			([primary.secondary(type, false)] + secondaries.map { |sec| sec.secondary(type, false) }).compact
 		end
 
 		def secondaries
@@ -45,7 +46,7 @@ module Ltx
 		end
 
 		def inspect
-			"[@primary => #{primary.inspect}, @secondaries => #{secondaries.inspect}]"
+			"<@primary => #{primary.inspect}, @secondaries => #{secondaries.inspect}>"
 		end
 
 		private

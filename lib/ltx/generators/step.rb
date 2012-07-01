@@ -1,5 +1,4 @@
 require 'ltx/commands/pdflatex_command'
-require 'digest/md5'
 
 module Ltx::Generators
 	class Step

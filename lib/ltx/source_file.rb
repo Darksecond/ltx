@@ -39,7 +39,7 @@ module Ltx
 		end
 
 		def inspect
-			"[@file => #{file.inspect}, @type => #{type.inspect}]"
+			"<@file => #{file.inspect}, @type => #{type.inspect}>"
 		end
 
 		def ==(other)
