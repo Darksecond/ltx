@@ -1,0 +1,3 @@
+* Introduce a log file which basically is the 'document' given
+	this is because then we can notice when it changes
+	for example when you add or remove bibliography databases

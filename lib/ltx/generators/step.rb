@@ -3,7 +3,7 @@ require 'digest/md5'
 
 module Ltx::Generators
 	class Step
-		def initialize(document, previous = nil, modules = nil)
+		def initialize(document, previous = nil, modules = [])
 			@tracks = {}
 			@previous = previous
 			if previous
