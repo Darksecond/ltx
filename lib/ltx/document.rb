@@ -52,6 +52,8 @@ module Ltx
 		private
 
 		def find_secondaries
+			#TODO build in a way to _not_ scan in excluded items
+
 			#going to assume that the base directory is the same the primary is in
 			sec_dirs_regexp = "{#{secondary_dirs.join(",")}}"
 			types_regexp = "{#{secondary_types.join(",")}}"

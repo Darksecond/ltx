@@ -47,7 +47,7 @@ module Ltx::Commands
 		#etc
 		
 		def rerun_needed?
-			return @rerun_needed
+			@rerun_needed
 		end
 
 		private

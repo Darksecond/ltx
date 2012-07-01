@@ -9,7 +9,7 @@ module Ltx::Modules
 		def start_chain(step)
 			#track glo
 			#fix this up massively
-			step.track(@document.primary.secondary("glo", true))
+			step.track_file(@document.primary.secondary("glo", true))
 		end
 
 		def post_compile(step)
@@ -17,6 +17,8 @@ module Ltx::Modules
 			if needs_run?(step)
 				gloss = Ltx::Commands::MakeglossariesCommand.new(@document.primary)
 				gloss.execute
+
+				step.rerun
 			end
 		end
 
@@ -28,12 +30,7 @@ module Ltx::Modules
 			end
 
 			#fix this up massively
-			current = step.get_track(@document.primary.secondary("glo"))
-			previous = step.previous.get_track(@document.primary.secondary("glo")) if step.previous
-			
-			#TODO what about current and previous both being nil?
-			
-			if current != previous
+			if step.get_file_tracker(@document.primary.secondary("glo")).changed?
 				return true
 			end
 

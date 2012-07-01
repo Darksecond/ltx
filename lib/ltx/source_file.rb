@@ -63,5 +63,10 @@ module Ltx
 		def exists?
 			File.exists? file
 		end
+
+		def mtime
+			return nil unless exists?
+			File.mtime file
+		end
 	end
 end

@@ -1,4 +1,6 @@
 require 'ltx/commands/pdflatex_command'
+require 'ltx/file_tracker'
+require 'ltx/extension_tracker'
 
 module Ltx::Generators
 	class Step
@@ -7,13 +9,14 @@ module Ltx::Generators
 					modules: original.modules, 
 					rerun: original.rerun?, 
 					generation: (original.generation + 1),
-					previous: original
+					previous: original,
+					trackers: original.trackers.clone
 				       )
 		end
 
 		def initialize(document, options={})
-			options = {generation: 0, rerun: true, previous: nil}.merge(options)
-			@tracks = {}
+			options = {generation: 0, rerun: true, previous: nil, trackers: []}.merge(options)
+			@trackers = options.fetch :trackers
 			@previous = options.fetch :previous
 			@generation = options.fetch :generation
 			@rerun = options.fetch :rerun
@@ -33,7 +36,7 @@ module Ltx::Generators
 			latex.execute
 			@rerun = latex.rerun_needed?
 			#retrack files
-			update_tracks
+			update_trackers
 			#run modules
 			@modules.each do |mod|
 				mod.post_compile(self)
@@ -66,20 +69,36 @@ module Ltx::Generators
 			@modules
 		end
 
-		#replace hash with actual class
-		def track(file)
-			@tracks[file] = file.checksum
+		def trackers
+			@trackers
 		end
 
-		def get_track(file)
-			@tracks[file]
+		def track_file(source)
+			#build in duplication detection
+			@trackers << Ltx::FileTracker.new(source)
+		end
+
+		def track_ext(ext)
+			@trackers << Ltx::ExtensionTracker.new(ext, document)
+		end
+		
+		def get_file_tracker(source)
+			@trackers.select { |tracker|
+				tracker.class == Ltx::FileTracker && tracker.source == source
+			}.first
+		end
+
+		def get_ext_tracker(ext)
+			@trackers.select { |tracker|
+				tracker.class == Ltx::ExtensionTracker && tracker.extension == ext
+			}.first
 		end
 
 		private
 
-		def update_tracks
-			@tracks.each do |key, _|
-				track(key)
+		def update_trackers
+			@trackers.map! do |tracker|
+				tracker.update
 			end
 		end
 
