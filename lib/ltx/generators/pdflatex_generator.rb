@@ -1,11 +1,15 @@
 require 'ltx/generators/step'
 require 'ltx/modules/makeglossaries_module'
+require 'ltx/modules/biber_module'
 
 module Ltx::Generators
 	class PdflatexGenerator
 		def initialize(document)
 			@document = document
-			@modules = [Ltx::Modules::MakeglossariesModule.new(document)]
+			@modules = [
+				Ltx::Modules::MakeglossariesModule.new(document), 
+				Ltx::Modules::BiberModule.new(document, [@document.primary.secondary("bib",true)])
+			]
 		end
 		
 		def generate

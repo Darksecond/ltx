@@ -1,0 +1,41 @@
+% $ biblatex auxiliary file $
+% $ biblatex version 1.7 $
+% $ biber version 0.9.9 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber or bibtex as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \entry{stageopdracht}{misc}{}
+    \name{labelname}{1}{}{%
+      {{uniquename=0,hash=c38c571aac5d4e7a93b3caedfc3b0883}{Negro}{N\bibinitperiod}{Rob}{R\bibinitperiod}{de}{d\bibinitperiod}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{uniquename=0,hash=c38c571aac5d4e7a93b3caedfc3b0883}{Negro}{N\bibinitperiod}{Rob}{R\bibinitperiod}{de}{d\bibinitperiod}{}{}}%
+    }
+    \strng{namehash}{c38c571aac5d4e7a93b3caedfc3b0883}
+    \strng{fullhash}{c38c571aac5d4e7a93b3caedfc3b0883}
+    \field{sortinit}{N}
+    \field{labelyear}{2011}
+    \field{month}{5}
+    \field{note}{zie bijlage~1}
+    \field{title}{Ik wil meer rendement}
+    \field{year}{2011}
+  \endentry
+
+\endrefsection
+\endinput
+

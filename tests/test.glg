@@ -1,0 +1,13 @@
+;; This logfile was generated automatically by `xindy'
+;; at 01.07.2012  22:53:24
+;; Indexstyle: "/var/folders/fv/qzn9wrwd6kxd6__q3ccklqt80000gp/T/CTdAJPLY25", Rawindex: "/var/folders/fv/qzn9wrwd6kxd6__q3ccklqt80000gp/T/0bPCRhloDO", Output: "test.gls"
+
+
+Building indexentry-tree:
+Hierdepth of index is :TREE
+
+sort-indexentries: (FORWARD BACKWARD FORWARD FORWARD)
+
+Forming letter-groups:
+sort-indexentries: (FORWARD BACKWARD FORWARD FORWARD)
+Letter-group: "Ъ—РЪ" -> "T"
