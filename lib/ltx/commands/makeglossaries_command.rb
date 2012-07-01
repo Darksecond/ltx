@@ -4,15 +4,14 @@ module Ltx::Commands
 	class MakeglossariesCommand
 		MAKEGLOSSARIES_COMMAND = "makeglossaries"
 
-		def initialize(document)
-			raise "no document specified" unless document
-			#check if document exists
+		def initialize(source)
+			raise "no source specified" unless source
 
-			@document = document
+			@source = source
 		end
 
-		def document
-			@document
+		def source
+			@source
 		end
 
 		def execute
@@ -23,6 +22,8 @@ module Ltx::Commands
 			Open3.popen3(MAKEGLOSSARIES_COMMAND, *arguments) do |stdin, stdout, stderr, wait_thr|
 				wait_thr.value
 			end
+
+			@source.rescan
 		end
 
 		private
@@ -30,7 +31,7 @@ module Ltx::Commands
 		def build_arguments
 			arguments = []
 			arguments << "-q"
-			arguments << @document
+			arguments << @source.base
 			arguments
 		end
 	end

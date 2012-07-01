@@ -9,13 +9,13 @@ module Ltx::Modules
 		def start_chain(step)
 			#track glo
 			#fix this up massively
-			step.track("#{@document}.glo")
+			step.track(@document.primary.secondary("glo", true))
 		end
 
 		def post_compile(step)
 			#fix this up massively
 			if needs_run?(step)
-				gloss = Ltx::Commands::MakeglossariesCommand.new(@document)
+				gloss = Ltx::Commands::MakeglossariesCommand.new(@document.primary)
 				gloss.execute
 			end
 		end
@@ -23,15 +23,16 @@ module Ltx::Modules
 		private
 
 		def needs_run?(step)
-			if not File.exists? "#{@document}.gls"
+			if not @document.primary.secondary("gls", true).exists?
 				return true
 			end
 
 			#fix this up massively
-			current = step.get_track("#{@document}.glo")
-			current = current[:checksum] if current
-			previous = step.previous.get_track("#{@document}.glo") if step.previous
-			previous = previous[:checksum] if previous
+			current = step.get_track(@document.primary.secondary("glo"))
+			previous = step.previous.get_track(@document.primary.secondary("glo")) if step.previous
+			
+			#TODO what about current and previous both being nil?
+			
 			if current != previous
 				return true
 			end

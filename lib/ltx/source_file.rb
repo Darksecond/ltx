@@ -1,7 +1,9 @@
+require 'digest/md5'
+
 module Ltx
 	class SourceFile
 		def initialize(file, ext=nil)
-			@file = file
+			@file = file.to_s
 			if extension == "" && ext
 				@file += ".#{ext}"
 			end
@@ -38,6 +40,28 @@ module Ltx
 
 		def inspect
 			"[@file => #{file.inspect}, @type => #{type.inspect}]"
+		end
+
+		def ==(other)
+			return false if other.nil?
+			self.file == other.file
+		end
+
+		def eql?(other)
+			self.==(other)
+		end
+
+		def hash
+			file.hash
+		end
+
+		def checksum
+			return nil unless exists?
+			Digest::MD5.file(file).to_s
+		end
+
+		def exists?
+			File.exists? file
 		end
 	end
 end

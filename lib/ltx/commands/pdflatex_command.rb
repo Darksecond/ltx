@@ -4,11 +4,10 @@ module Ltx::Commands
 	class PdflatexCommand
 		PDFLATEX_COMMAND = "pdflatex"
 
-		def initialize(document)
-			raise "no document specified" unless document
-			#check if document exists
+		def initialize(source)
+			raise "no source specified" unless source
 
-			@document = document
+			@source = source
 			@draft = false
 		end
 
@@ -24,8 +23,8 @@ module Ltx::Commands
 			@draft = draft
 		end
 
-		def document
-			@document
+		def source
+			@source
 		end
 
 		def execute
@@ -36,6 +35,8 @@ module Ltx::Commands
 			Open3.popen3(PDFLATEX_COMMAND, *arguments) do |stdin, stdout, stderr, wait_thr|
 				wait_thr.value
 			end
+
+			@source.rescan
 
 			#parse log
 			parse_log read_log
@@ -55,14 +56,14 @@ module Ltx::Commands
 			arguments = []
 			arguments << "-draftmode" if @draft
 			arguments << "-interaction=batchmode"
-			arguments << @document
+			arguments << @source.base
 			arguments
 		end
 
 		def read_log
 			lines = []
 			prev = ""
-			File.open("#{@document}.log") do |file|
+			File.open(@source.secondary("log").to_s) do |file|
 				until file.eof?
 					line = file.readline.strip!
 					if line.length == 79

@@ -20,8 +20,12 @@ module Ltx
 			primary.base
 		end
 
-		def secondary(type)
-			@secondaries.select { |sec| sec.type == type }.first
+		def secondary(type, force=false)
+			selected = @secondaries.select { |sec| sec.type == type }.first
+			if force && selected == nil
+				selected = SourceFile.new "#{base}.#{type}"
+			end
+			selected
 		end
 
 		def secondaries
@@ -38,6 +42,19 @@ module Ltx
 
 		def inspect
 			"[@primary => #{primary.inspect}, @type => #{type.inspect}, @secondaries => #{secondaries.inspect}]"
+		end
+
+		def ==(other)
+			return false if other.nil?
+			self.primary == other.primary
+		end
+
+		def eql?(other)
+			self.==(other)
+		end
+
+		def hash
+			primary.hash
 		end
 
 		private
