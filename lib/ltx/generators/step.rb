@@ -2,6 +2,8 @@ require 'ltx'
 
 module Ltx::Generators
 	class Step
+		include Ltx::Log
+
 		def self.create_from_step(original)
 			step = Step.new(original.document, 
 					modules: original.modules, 
@@ -21,6 +23,8 @@ module Ltx::Generators
 			@modules = options.fetch :modules
 			@document = document
 
+			log! self, "Step, generation: #{@generation}"
+
 			#init modules
 			#this should probably go somewhere else...
 			if @generation == 0
@@ -28,10 +32,20 @@ module Ltx::Generators
 			end
 		end
 
+		def full_log
+			log = []
+			unless previous.nil?
+				log += previous.full_log
+			end
+			log += @log
+			log
+		end
+
 		def next_step
 			#run pdflatex_command
 			latex = Ltx::Commands::PdflatexCommand.new(@document)
 			latex.execute
+			log! self, "Executing Pdflatex"
 			@rerun = latex.rerun_needed?
 			#retrack files
 			update_trackers

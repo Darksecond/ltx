@@ -12,3 +12,4 @@ doc = Ltx::Document.new "test"
 latex = Ltx::Generators::PdflatexGenerator.new(doc)
 last_step = latex.generate
 last_step.generation
+puts latex.log

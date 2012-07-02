@@ -17,6 +17,7 @@ module Ltx::Modules
 			if needs_run?(step)
 				gloss = Ltx::Commands::MakeglossariesCommand.new(@document.primary)
 				gloss.execute
+				step.log! self, "Executing makeglossaries"
 
 				step.rerun
 			end

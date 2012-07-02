@@ -2,6 +2,8 @@ require 'ltx'
 
 module Ltx::Generators
 	class PdflatexGenerator
+		include Ltx::Log
+
 		def initialize(document)
 			@document = document
 			@modules = [
@@ -11,6 +13,7 @@ module Ltx::Generators
 		end
 		
 		def generate
+			log! self, "Starting"
 			#current_step = generate step
 			#while current_step.rerun?
 			#current_step = current_step.next_step
@@ -21,6 +24,8 @@ module Ltx::Generators
 				current_step = current_step.next_step
 			end
 
+			log! self, current_step.full_log
+			log! self, "Finished"
 			current_step
 		end
 	end

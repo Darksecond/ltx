@@ -1,4 +1,6 @@
 module Ltx
+	require 'pry'
+
 	autoload :VERSION, 'ltx/version'
 	autoload :Document, 'ltx/document'
 	autoload :ExtensionTracker, 'ltx/extension_tracker'
@@ -23,5 +25,19 @@ module Ltx
 	module Modules
 		autoload :BiberModule, 'ltx/modules/biber_module'
 		autoload :MakeglossariesModule, 'ltx/modules/makeglossaries_module'
+	end
+	
+	module Log
+
+		def log!(who, what)
+			@log ||= []
+			Array(what).each do |line|
+				@log << who.class.to_s + ": " + line.to_s
+			end
+		end
+
+		def log
+			@log
+		end
 	end
 end

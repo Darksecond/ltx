@@ -31,6 +31,7 @@ module Ltx::Modules
 			if needs_run?(step)
 				cmd = Ltx::Commands::BiberCommand.new(@document.primary)
 				cmd.execute
+				step.log! self, "Executing Biber"
 
 				step.rerun
 			end
