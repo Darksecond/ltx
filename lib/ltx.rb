@@ -32,7 +32,8 @@ module Ltx
 		def log!(who, what)
 			@log ||= []
 			Array(what).each do |line|
-				@log << who.class.to_s + ": " + line.to_s
+				#who.class.to_s.split("::").last -> only the class name, not the namespacing
+				@log << who.class.to_s.split("::").last + ": " + line.to_s
 			end
 		end
 
