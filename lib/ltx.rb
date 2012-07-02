@@ -7,6 +7,7 @@ module Ltx
 	autoload :AuxSourceFile, 'ltx/aux_source_file'
 	autoload :Source, 'ltx/source'
 	autoload :SourceFile, 'ltx/source_file'
+	autoload :SourceDirectory, 'ltx/source_directory'
 
 	module Commands
 		autoload :BiberCommand, 'ltx/commands/biber_command'

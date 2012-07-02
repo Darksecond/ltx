@@ -2,9 +2,10 @@ require 'ltx'
 
 module Ltx
 	class Source
-		def initialize(base)
+		def initialize(base, options={})
+			options = {type: "other"}.merge(options)
 			@base = base
-			@type = find_type
+			@type = options.fetch :type
 			rescan
 		end
 
@@ -58,17 +59,6 @@ module Ltx
 		def find_files
 			files = Dir.glob("#{base}.*")
 			files.map { |sec| SourceFile.for sec }
-		end
-
-		def find_type
-			type = base.to_s.split("/")[0]
-			unless types.include? type
-				"primary"
-			end
-		end
-
-		def types
-			["chapters", "appendices", "frontmatter"]
 		end
 	end
 end

@@ -5,16 +5,20 @@ module Ltx
 		#options
 		##generators
 		##modules
+		#make directories a little more user friendly to specify
 		
-		def initialize(primary)
+		def initialize(primary, options={})
 			raise "primary can't be nil" if primary.nil?
-			@primary = Source.new primary
-			rescan 
+			@primary = Source.new(primary, type: "primary")
+			options = {directories: default_dirs}.merge(options)
+			@directories = options.fetch :directories
 		end
 
 		def rescan
-			@primary.rescan # i know, double work...
-			@secondaries = find_secondaries
+			@primary.rescan	
+			@directories.each do |dir|
+				dir.rescan
+			end
 		end
 
 		def compile
@@ -30,15 +34,19 @@ module Ltx
 		end
 
 		def basedir
-			File.dirname primary
+			File.dirname primary.to_s
 		end
 
 		def find_by_type(type)
-			([primary.file(type, false)] + secondaries.map { |sec| sec.file(type, false) }).compact
+			([primary.file(type, false)] + directories.map { |dir| dir.find_by_type(type) }.flatten).compact
 		end
 
-		def secondaries
-			@secondaries
+		def directories
+			@directories
+		end
+
+		def directory(type)
+			directories.select { |dir| dir.type == type }.first
 		end
 
 		def to_s
@@ -46,28 +54,22 @@ module Ltx
 		end
 
 		def inspect
-			"<@primary => #{primary.inspect}, @secondaries => #{secondaries.inspect}>"
+			"<@primary => #{primary.inspect}, @directories => #{directories.inspect}>"
 		end
 
 		private
 
-		def find_secondaries
-			#TODO build in a way to _not_ scan in excluded items
+		def default_dirs
+			pdir = SourceDirectory.new(self, "primary", manual: true)
+			pdir.include(File.join(basedir, "chapters"))
+			pdir.include(File.join(basedir, "appendices"))
 
-			#going to assume that the base directory is the same the primary is in
-			sec_dirs_regexp = "{#{secondary_dirs.join(",")}}"
-			types_regexp = "{#{secondary_types.join(",")}}"
-
-			secondaries = Dir.glob("#{sec_dirs_regexp}/**/*.{#{types_regexp}}")
-			secondaries.map { |sec| Source.new sec }
-		end
-
-		def secondary_dirs
-			["chapters", "appendices", "frontmatter"]
-		end
-
-		def secondary_types
-			["tex"]
+			[
+				SourceDirectory.new(self, "chapters"),
+				SourceDirectory.new(self, "appendices"),
+				SourceDirectory.new(self, "frontmatter"),
+				pdir
+			]
 		end
 	end
 end
