@@ -1,15 +1,16 @@
+require 'ltx'
 require 'open3'
 
 module Ltx::Commands
 	class BiberCommand
 		BIBER_COMMAND = "biber"
 
-		def initialize(document)
-			@document = document
+		def initialize(source)
+			@source = source
 		end
 
-		def document
-			@document
+		def source
+			@source
 		end
 
 		def execute
@@ -19,7 +20,7 @@ module Ltx::Commands
 				wait_thr.value
 			end
 
-			@document.rescan
+			@source.rescan
 		end
 
 		private
@@ -27,7 +28,7 @@ module Ltx::Commands
 		def build_arguments
 			arguments = []
 			arguments << "--quiet"
-			arguments << @document.primary.base
+			arguments << @source.base
 			arguments
 		end
 		

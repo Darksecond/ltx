@@ -1,35 +1,31 @@
-require 'ltx/source_file'
+require 'ltx'
 
 module Ltx
 	class Source
-		def initialize(primary)
-			@primary = SourceFile.new primary.to_s, "tex"
+		def initialize(base)
+			@base = base
 			@type = find_type
 			rescan
 		end
 
 		def rescan
-			@secondaries = find_secondaries
-		end
-
-		def primary
-			@primary
+			@files = find_files
 		end
 
 		def base
-			primary.base
+			@base
 		end
 
-		def secondary(type, force=false)
-			selected = @secondaries.select { |sec| sec.type == type }.first
+		def file(type, force=false)
+			selected = @files.select { |sec| sec.type == type }.first
 			if force && selected == nil
-				selected = SourceFile.new "#{base}.#{type}"
+				selected = SourceFile.for "#{base}.#{type}"
 			end
 			selected
 		end
 
-		def secondaries
-			@secondaries
+		def files
+			@files
 		end
 
 		def type
@@ -37,16 +33,16 @@ module Ltx
 		end
 
 		def to_s
-			primary
+			base
 		end
 
 		def inspect
-			"<@primary => #{primary.inspect}, @type => #{type.inspect}, @secondaries => #{secondaries.inspect}>"
+			"<@base => #{base.inspect}, @type => #{type.inspect}, @secondaries => #{files.inspect}>"
 		end
 
 		def ==(other)
 			return false if other.nil?
-			self.primary == other.primary
+			self.base == other.base
 		end
 
 		def eql?(other)
@@ -54,19 +50,18 @@ module Ltx
 		end
 
 		def hash
-			primary.hash
+			base.hash
 		end
 
 		private
 
-		def find_secondaries
-			secondaries = Dir.glob("#{base}.*")
-			secondaries.delete "#{base}.#{primary.extension}"
-			secondaries.map { |sec| SourceFile.new sec }
+		def find_files
+			files = Dir.glob("#{base}.*")
+			files.map { |sec| SourceFile.for sec }
 		end
 
 		def find_type
-			type = primary.to_s.split("/")[0]
+			type = base.to_s.split("/")[0]
 			unless types.include? type
 				"primary"
 			end

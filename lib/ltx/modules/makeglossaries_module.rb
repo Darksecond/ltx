@@ -1,4 +1,4 @@
-require 'ltx/commands/makeglossaries_command'
+require 'ltx'
 
 module Ltx::Modules
 	class MakeglossariesModule
@@ -9,7 +9,7 @@ module Ltx::Modules
 		def start_chain(step)
 			#track glo
 			#fix this up massively
-			step.track_file(@document.primary.secondary("glo", true))
+			step.track_file(@document.primary.file("glo", true))
 		end
 
 		def post_compile(step)
@@ -25,12 +25,12 @@ module Ltx::Modules
 		private
 
 		def needs_run?(step)
-			if not @document.primary.secondary("gls", true).exists?
+			if not @document.primary.file("gls", true).exists?
 				return true
 			end
 
 			#fix this up massively
-			if step.get_file_tracker(@document.primary.secondary("glo")).changed?
+			if step.get_file_tracker(@document.primary.file("glo")).changed?
 				return true
 			end
 

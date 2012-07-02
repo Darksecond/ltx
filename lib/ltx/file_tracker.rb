@@ -1,3 +1,4 @@
+require 'ltx'
 
 module Ltx
 	class FileTracker

@@ -1,6 +1,4 @@
-require 'ltx/commands/pdflatex_command'
-require 'ltx/file_tracker'
-require 'ltx/extension_tracker'
+require 'ltx'
 
 module Ltx::Generators
 	class Step
@@ -32,7 +30,7 @@ module Ltx::Generators
 
 		def next_step
 			#run pdflatex_command
-			latex = Ltx::Commands::PdflatexCommand.new(@document.primary)
+			latex = Ltx::Commands::PdflatexCommand.new(@document)
 			latex.execute
 			@rerun = latex.rerun_needed?
 			#retrack files

@@ -1,3 +1,4 @@
+require 'ltx'
 require 'open3'
 
 module Ltx::Commands

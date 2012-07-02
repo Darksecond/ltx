@@ -1,7 +1,19 @@
+require 'ltx'
 require 'digest/md5'
 
 module Ltx
 	class SourceFile
+		def self.for(file, force=false)
+			case file.partition(".").last
+				when "log"
+					LogSourceFile.new file, force
+				when "aux"
+					AuxSourceFile.new file, force
+				else
+					SourceFile.new file, force
+			end
+		end
+
 		def initialize(file, ext=nil)
 			@file = file.to_s
 			if extension == "" && ext

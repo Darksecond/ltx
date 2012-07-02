@@ -1,4 +1,4 @@
-require 'ltx/commands/biber_command'
+require 'ltx'
 
 module Ltx::Modules
 	class BiberModule
@@ -16,17 +16,20 @@ module Ltx::Modules
 			step.track_ext "aux"
 
 			#bibs changed since last compile
-			pdf = @document.primary.secondary("pdf",true)
+			pdf = @document.primary.file("pdf",true)
 			@bibs.each do |bib|
-				if bib.mtime > pdf.mtime
+				if pdf.exists? && bib.mtime > pdf.mtime
 					@needs_run = true
 				end
+			end
+			unless pdf.exists? #does this belong here? or in needs_run?
+				@needs_run = true
 			end
 		end
 
 		def post_compile(step)
 			if needs_run?(step)
-				cmd = Ltx::Commands::BiberCommand.new(@document)
+				cmd = Ltx::Commands::BiberCommand.new(@document.primary)
 				cmd.execute
 
 				step.rerun
@@ -48,7 +51,7 @@ module Ltx::Modules
 			
 			#parse aux
 			citations, dbs = parse_aux
-			undefs = parse_log
+			undefs = @document.primary.file("log", true).undefined_citations
 			if @dbs != dbs
 				@dbs = dbs
 				@citations = citations
@@ -71,7 +74,7 @@ module Ltx::Modules
 			@undefs = undefs
 
 			#doc.primary.blg does not exist, rerun
-			unless @document.primary.secondary("blg").exists?
+			unless @document.primary.file("blg",true).exists?
 				return true
 			end
 
@@ -80,8 +83,8 @@ module Ltx::Modules
 			end
 
 			#doc.primary.blg is older than doc.primary.log, rerun
-			blg = @document.primary.secondary("blg").mtime
-			log = @document.primary.secondary("log").mtime
+			blg = @document.primary.file("blg").mtime
+			log = @document.primary.file("log").mtime
 			if blg < log
 				return true
 			end
@@ -92,40 +95,11 @@ module Ltx::Modules
 		def parse_aux
 			citations = []
 			dbs = []
-			files = @document.find_by_type "aux"
-			files.each do |file|
-				File.open(file.to_s) do |aux|
-					until aux.eof?
-						line = aux.readline.strip!
-						match = /\\citation{(?<cite>.*)}/.match(line)
-						if match
-							citations << match[:cite]
-						end
-						match = /\\bibdata{(?<data>.*)}/.match(line)
-						if match
-							dbs += match[:data].split(",")
-						end
-					end
-				end
+			files = @document.find_by_type("aux").each do |file|
+				citations += file.used_citations
+				dbs += file.databases
 			end
 			[citations, dbs]
-		end
-
-		def parse_log
-			undefs = []
-			log = @document.primary.secondary("log")
-			if log.exists?
-				File.open(log.to_s) do |log|
-					until log.eof?
-						line = log.readline.strip!
-						match = /LaTeX Warning: Citation `(?<cite>.*)' .*undefined.*/.match(line)
-						if match
-							undefs << match[:cite]
-						end
-					end
-				end
-			end
-			undefs
 		end
 	end
 end

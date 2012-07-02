@@ -1,4 +1,4 @@
-require 'ltx/source'
+require 'ltx'
 
 module Ltx
 	class Document
@@ -34,7 +34,7 @@ module Ltx
 		end
 
 		def find_by_type(type)
-			([primary.secondary(type, false)] + secondaries.map { |sec| sec.secondary(type, false) }).compact
+			([primary.file(type, false)] + secondaries.map { |sec| sec.file(type, false) }).compact
 		end
 
 		def secondaries
