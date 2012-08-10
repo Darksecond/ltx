@@ -12,7 +12,7 @@ module Ltx::Modules
 			@needs_run = false
 		end
 
-		def start_chain(step)
+		def begin_chain(step)
 			step.track_ext "aux"
 
 			#bibs changed since last compile
@@ -28,16 +28,12 @@ module Ltx::Modules
 		end
 
 		def post_compile(step)
-			if needs_run?(step)
-				cmd = Ltx::Commands::BiberCommand.new(@document.primary)
-				cmd.execute
-				step.log! self, "Executing Biber"
+			cmd = Ltx::Commands::BiberCommand.new(@document.primary)
+			cmd.execute
+			step.log! self, "Executing Biber"
 
-				step.rerun
-			end
+			step.rerun
 		end
-
-		private
 
 		def needs_run?(step)
 			if @needs_run
@@ -92,6 +88,8 @@ module Ltx::Modules
 
 			return false
 		end
+
+		private
 
 		def parse_aux
 			citations = []

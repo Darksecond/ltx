@@ -15,7 +15,7 @@ module Ltx::Generators
 		end
 
 		def initialize(document, options={})
-			options = {generation: 0, rerun: true, previous: nil, trackers: []}.merge(options)
+			options = {generation: 0, rerun: true, previous: nil, trackers: [], modules: []}.merge(options)
 			@trackers = options.fetch :trackers
 			@previous = options.fetch :previous
 			@generation = options.fetch :generation
@@ -24,12 +24,6 @@ module Ltx::Generators
 			@document = document
 
 			log! self, "Step, generation: #{@generation}"
-
-			#init modules
-			#this should probably go somewhere else...
-			if @generation == 0
-				init_modules
-			end
 		end
 
 		def full_log
@@ -41,8 +35,25 @@ module Ltx::Generators
 			log
 		end
 
+		def begin
+			@modules.each do |mod|
+				mod.begin_chain(self)
+			end
+			log! self, "Running Begin chain on all modules"
+		end
+
+		def end
+			@modules.each do |mod|
+				if mod.respond_to? :end_chain
+					mod.end_chain(self)
+				end
+			end
+			log! self, "Running end chain on all modules"
+		end
+
 		def next_step
 			#run pdflatex_command
+			#TODO move this into a (special case) module?
 			latex = Ltx::Commands::PdflatexCommand.new(@document)
 			latex.execute
 			log! self, "Executing Pdflatex"
@@ -51,7 +62,9 @@ module Ltx::Generators
 			update_trackers
 			#run modules
 			@modules.each do |mod|
-				mod.post_compile(self)
+				if mod.needs_run? self
+					mod.post_compile self
+				end
 			end
 			#return new step
 			Step.create_from_step(self)
@@ -111,12 +124,6 @@ module Ltx::Generators
 		def update_trackers
 			@trackers.map! do |tracker|
 				tracker.update
-			end
-		end
-
-		def init_modules
-			@modules.each do |mod|
-				mod.start_chain(self)
 			end
 		end
 	end

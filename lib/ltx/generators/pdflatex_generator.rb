@@ -14,16 +14,16 @@ module Ltx::Generators
 		
 		def generate
 			log! self, "Starting"
-			#current_step = generate step
-			#while current_step.rerun?
-			#current_step = current_step.next_step
 			current_step = Step.new @document, {modules: @modules}
+
+			current_step.begin
 
 			while current_step.rerun?
 				raise "generation got too large: #{current_step.generation}" if current_step.generation > 10
 				current_step = current_step.next_step
 			end
 
+			current_step.end
 			log! self, current_step.full_log
 			log! self, "Finished"
 			current_step

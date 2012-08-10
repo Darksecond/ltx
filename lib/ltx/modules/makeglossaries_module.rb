@@ -6,24 +6,17 @@ module Ltx::Modules
 			@document = document
 		end
 
-		def start_chain(step)
-			#track glo
-			#fix this up massively
+		def begin_chain(step)
 			step.track_file(@document.primary.file("glo", true))
 		end
 
 		def post_compile(step)
-			#fix this up massively
-			if needs_run?(step)
-				gloss = Ltx::Commands::MakeglossariesCommand.new(@document.primary)
-				gloss.execute
-				step.log! self, "Executing makeglossaries"
+			gloss = Ltx::Commands::MakeglossariesCommand.new(@document.primary)
+			gloss.execute
+			step.log! self, "Executing makeglossaries"
 
-				step.rerun
-			end
+			step.rerun
 		end
-
-		private
 
 		def needs_run?(step)
 			if not @document.primary.file("gls", true).exists?

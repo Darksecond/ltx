@@ -27,10 +27,11 @@ module Ltx
 			return true unless exists?
 			lines.each do |line|
 				if (line =~ /LaTeX Warning:.*Rerun/) != nil
-					@rerun_needed = true
+					return true
 					#elsif
 				end
 			end
+			return false
 		end
 
 		def undefined_citations

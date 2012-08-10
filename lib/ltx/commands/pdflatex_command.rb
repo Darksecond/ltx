@@ -39,8 +39,6 @@ module Ltx::Commands
 
 			@document.rescan
 
-			#parse log
-			parse_log read_log
 		end
 
 		#...log parsing here...
@@ -48,7 +46,7 @@ module Ltx::Commands
 		#etc
 		
 		def rerun_needed?
-			@rerun_needed
+			@document.primary.file("log", true).rerun_needed?
 		end
 
 		private
@@ -59,36 +57,6 @@ module Ltx::Commands
 			arguments << "-interaction=batchmode"
 			arguments << @document.primary.base
 			arguments
-		end
-
-		def read_log
-			lines = []
-			prev = ""
-			File.open(@document.primary.file("log").to_s) do |file|
-				until file.eof?
-					line = file.readline.strip!
-					if line.length == 79
-						prev += line
-					elsif line.length == 0
-						lines << prev if prev != ""
-						prev = ""
-					else
-						prev += line
-						lines << prev
-						prev = ""
-					end
-				end
-			end
-			lines
-		end
-
-		def parse_log(lines)
-			lines.each do |line|
-				if (line =~ /LaTeX Warning:.*Rerun/) != nil
-					@rerun_needed = true
-				#elsif
-				end
-			end
 		end
 	end
 end
