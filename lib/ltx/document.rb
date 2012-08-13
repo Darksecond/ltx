@@ -16,13 +16,17 @@ module Ltx
 
 		def rescan
 			@primary.rescan	
-			@directories.each do |dir|
-				dir.rescan
-			end
+			@directories.each &:rescan
 		end
 
 		def compile
-			#TODO...
+			[
+			Generators::PdflatexGenerator.maybe?(self)
+			].compact.each &:generate
+		end
+		
+		def clean
+			raise "not yet implemented"
 		end
 
 		def primary
@@ -55,6 +59,31 @@ module Ltx
 
 		def inspect
 			"<@primary => #{primary.inspect}, @directories => #{directories.inspect}>"
+		end
+
+		#--- PDFLATEX ---#
+		#---   BIBER  ---#
+		def bibliography?
+			@bibtex || false
+		end
+
+		def bibliography(file=nil)
+			@bibtex_files ||= [] unless file.nil?
+			@bibtex_files << file unless file.nil?
+			@bibtex = true
+		end
+
+		def bibliographies
+			@bibtex_files || [primary.file("bib",true)]
+		end
+
+		#--- GLOSSARIES ---#
+		def glossary?
+			@glossary || false
+		end
+
+		def glossary
+			@glossary = true
 		end
 
 		private

@@ -2,6 +2,16 @@ require 'ltx'
 
 module Ltx::Modules
 	class BiberModule
+		include Ltx::Log
+
+		def self.maybe?(document)
+			if document.bibliography?
+				new document, document.bibliographies
+			else
+				nil
+			end
+		end
+
 		def initialize(document, bibs)
 			@document = document
 			@bibs = bibs
@@ -30,7 +40,7 @@ module Ltx::Modules
 		def post_compile(step)
 			cmd = Ltx::Commands::BiberCommand.new(@document.primary)
 			cmd.execute
-			step.log! self, "Executing Biber"
+			info self, "Executing Biber"
 
 			step.rerun
 		end

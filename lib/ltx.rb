@@ -1,7 +1,9 @@
 module Ltx
 	require 'pry'
+	require 'logger'
 
 	autoload :VERSION, 'ltx/version'
+	autoload :DSL, 'ltx/dsl'
 	autoload :Document, 'ltx/document'
 	autoload :ExtensionTracker, 'ltx/extension_tracker'
 	autoload :FileTracker, 'ltx/file_tracker'
@@ -29,16 +31,24 @@ module Ltx
 	
 	module Log
 
-		def log!(who, what)
-			@log ||= []
-			Array(what).each do |line|
-				#who.class.to_s.split("::").last -> only the class name, not the namespacing
-				@log << who.class.to_s.split("::").last + ": " + line.to_s
-			end
+		def logger
+			@@logger ||= Logger.new STDOUT #replace with variable to stdout or file?
 		end
 
-		def log
-			@log
+		def debug(who, what)
+			logger.debug who.class.to_s + " - " + what
+		end
+
+		def info(who, what)
+			logger.info who.class.to_s + " - " + what
+		end
+
+		def warn(who, what)
+			logger.warn who.class.to_s + " - " + what
+		end
+
+		def error(who, what)
+			logger.error who.class.to_s + " - " + what
 		end
 	end
 end

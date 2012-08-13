@@ -5,11 +5,13 @@ lib = File.expand_path(File.dirname(__FILE__) + '/../lib')
 $LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
 
 require 'ltx'
-#...
 
 #TEST
-doc = Ltx::Document.new "test"
-latex = Ltx::Generators::PdflatexGenerator.new(doc)
-last_step = latex.generate
-last_step.generation
-puts latex.log
+docs = Ltx::DSL.exec do
+	document "test" do
+		bibliography
+		glossary
+	end
+end
+
+docs.each &:compile

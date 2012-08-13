@@ -2,6 +2,16 @@ require 'ltx'
 
 module Ltx::Modules
 	class MakeglossariesModule
+		include Ltx::Log
+
+		def self.maybe?(document)
+			if document.glossary?
+				new document
+			else
+				nil
+			end
+		end
+
 		def initialize(document)
 			@document = document
 		end
@@ -13,7 +23,7 @@ module Ltx::Modules
 		def post_compile(step)
 			gloss = Ltx::Commands::MakeglossariesCommand.new(@document.primary)
 			gloss.execute
-			step.log! self, "Executing makeglossaries"
+			info self, "Executing makeglossaries"
 
 			step.rerun
 		end
