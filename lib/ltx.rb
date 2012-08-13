@@ -4,6 +4,7 @@ module Ltx
 
 	autoload :VERSION, 'ltx/version'
 	autoload :DSL, 'ltx/dsl'
+	autoload :CLI, 'ltx/cli'
 	autoload :Document, 'ltx/document'
 	autoload :ExtensionTracker, 'ltx/extension_tracker'
 	autoload :FileTracker, 'ltx/file_tracker'
