@@ -7,6 +7,12 @@ module Ltx
 		##modules
 		#make directories a little more user friendly to specify
 		
+		# Public: Create a new document.
+		#
+		# primary - The basename for the document.
+		# options - A hash of options (:directories to override default directories)
+		#
+		# Returns Document you created.
 		def initialize(primary, options={})
 			raise "primary can't be nil" if primary.nil?
 			@primary = Source.new(primary, type: "primary")
@@ -89,15 +95,15 @@ module Ltx
 		private
 
 		def default_dirs
-			pdir = SourceDirectory.new(self, "primary", manual: true)
-			pdir.include(File.join(basedir, "chapters"))
-			pdir.include(File.join(basedir, "appendices"))
-
 			[
 				SourceDirectory.new(self, "chapters"),
 				SourceDirectory.new(self, "appendices"),
 				SourceDirectory.new(self, "frontmatter"),
-				pdir
+				SourceDirectory.new(self, "primary", manual: true) do |p|
+					p.include("chapters", basedir)
+					p.include("appendices", basedir)
+				end
+
 			]
 		end
 	end

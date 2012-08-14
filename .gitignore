@@ -1,6 +1,8 @@
 *.gem
 .bundle
+.yardoc
 Gemfile.lock
 pkg/*
+doc
 test.tex
 *.swp

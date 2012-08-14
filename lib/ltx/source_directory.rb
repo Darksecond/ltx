@@ -13,6 +13,7 @@ module Ltx
 				  else
 					  find_sources
 				  end
+			yield self if block_given?
 		end
 
 		def rescan
@@ -33,7 +34,13 @@ module Ltx
 			sources.map { |sec| sec.file(type, false) }.compact
 		end
 
-		def include(source)
+		# Public: manually include a directory.
+		#
+		# basedir - By default it is nil, however if you specify it, it will base source on it.
+		#
+		# Returns nothing.
+		def include(source, base=nil)
+			source = File.join(base, source.to_s) unless base.nil?
 			@sources << Source.new(source.to_s, type: @type)
 		end
 		
