@@ -21,7 +21,7 @@ module Ltx::Generators
 			current_step.begin
 
 			while current_step.rerun?
-				#warn or error or fatal here?
+				#TODO warn or error or fatal here?
 				raise "generation got too large: #{current_step.generation}" if current_step.generation > 10
 				current_step = current_step.next_step
 			end
@@ -29,6 +29,25 @@ module Ltx::Generators
 			current_step.end
 			info self, "Finished"
 			current_step
+		end
+
+		def clean(full=false)
+			#TODO delegate to modules instead!
+			queue = [
+			@document.find_by_type("aux"),
+			@document.find_by_type("bbl"),
+			@document.find_by_type("bcf"),
+			@document.find_by_type("blg"),
+			@document.find_by_type("glg"),
+			@document.find_by_type("glo"),
+			@document.find_by_type("gls"),
+			@document.find_by_type("log"),
+			@document.find_by_type("run.xml"),
+			@document.find_by_type("xdy")
+			].flatten
+
+			queue << @document.primary.file("pdf") if full
+			queue.compact.each &:destroy!
 		end
 
 		private

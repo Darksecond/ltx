@@ -1,11 +1,37 @@
 require 'ltx'
 
 module Ltx
+	#TODO move to seperate file
+	module GlossaryDocumentExtension
+		def glossary?
+			@glossary || false
+		end
+
+		def glossary
+			@glossary = true
+		end
+	end
+
+	#TODO move to seperate file
+	module BibliographyDocumentExtension
+		def bibliography?
+			@bibtex || false
+		end
+
+		def bibliography(file=nil)
+			@bibtex_files ||= [] unless file.nil?
+			@bibtex_files << file unless file.nil?
+			@bibtex = true
+		end
+
+		def bibliographies
+			@bibtex_files || [primary.file("bib",true)]
+		end
+	end
+
 	class Document
-		#options
-		##generators
-		##modules
-		#make directories a little more user friendly to specify
+		include GlossaryDocumentExtension
+		include BibliographyDocumentExtension
 		
 		# Public: Create a new document.
 		#
@@ -31,8 +57,12 @@ module Ltx
 			].compact.each &:generate
 		end
 		
-		def clean
-			raise "not yet implemented"
+		def clean(full=false)
+			[
+			Generators::PdflatexGenerator.maybe?(self)
+			].compact.each do |gen|
+				gen.clean(full)
+			end
 		end
 
 		def primary
@@ -56,7 +86,7 @@ module Ltx
 		end
 
 		def directory(type)
-			directories.select { |dir| dir.type == type }.first
+			directories.select { |dir| dir.type == type }
 		end
 
 		def to_s
@@ -67,31 +97,6 @@ module Ltx
 			"<@primary => #{primary.inspect}, @directories => #{directories.inspect}>"
 		end
 
-		#--- PDFLATEX ---#
-		#---   BIBER  ---#
-		def bibliography?
-			@bibtex || false
-		end
-
-		def bibliography(file=nil)
-			@bibtex_files ||= [] unless file.nil?
-			@bibtex_files << file unless file.nil?
-			@bibtex = true
-		end
-
-		def bibliographies
-			@bibtex_files || [primary.file("bib",true)]
-		end
-
-		#--- GLOSSARIES ---#
-		def glossary?
-			@glossary || false
-		end
-
-		def glossary
-			@glossary = true
-		end
-
 		private
 
 		def default_dirs
@@ -100,8 +105,8 @@ module Ltx
 				SourceDirectory.new(self, "appendices"),
 				SourceDirectory.new(self, "frontmatter"),
 				SourceDirectory.new(self, "primary", manual: true) do |p|
-					p.include("chapters", basedir)
-					p.include("appendices", basedir)
+					p.include("chapters", basedir) #chapters.tex
+					p.include("appendices", basedir) #appendices.tex
 				end
 
 			]

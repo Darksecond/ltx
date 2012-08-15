@@ -14,7 +14,7 @@ module Ltx
 			end
 		end
 
-		def initialize(file, ext=nil)
+		def initialize(file, ext=nil) #TODO ext?, force? huh?!?
 			@file = file.to_s
 			if extension == "" && ext
 				@file += ".#{ext}"
@@ -79,6 +79,14 @@ module Ltx
 		def mtime
 			return nil unless exists?
 			File.mtime file
+		end
+
+		def destroy!
+			begin
+			File.unlink file
+			rescue
+				#file did not exist
+			end
 		end
 	end
 end

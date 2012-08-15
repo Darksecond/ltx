@@ -14,8 +14,11 @@ module Ltx
 		end
 
 		desc "clean [project]", "remove all temporary files for a project"
+		method_option :full, :type => :boolean, :desc => "do a full clean (also remove output pdf)", :aliases => "-f"
 		def clean(project=DEFAULT)
-			docs(project).each &:clean
+			docs(project).each do |doc|
+				doc.clean options[:full]
+			end
 		end
 
 		private
