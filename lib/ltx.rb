@@ -22,6 +22,7 @@ module Ltx
 
 	module Generators
 		autoload :PdflatexGenerator, 'ltx/generators/pdflatex_generator'
+		autoload :DeptexGenerator, 'ltx/generators/deptex_generator'
 		autoload :Step, 'ltx/generators/step'
 	end
 

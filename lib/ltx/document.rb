@@ -53,13 +53,14 @@ module Ltx
 
 		def chain
 			[
+			Generators::DeptexGenerator.maybe?(self),
 			Generators::PdflatexGenerator.maybe?(self)
 			].compact
 		end
 
 		def compile
 			chain.each &:generate
-		rescue
+		#rescue
 			#an error has occured during compile
 		end
 		

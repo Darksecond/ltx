@@ -37,6 +37,8 @@ module Ltx::Commands
 				wait_thr.value
 			end
 
+			#TODO do something with errors!!!
+
 			@document.rescan
 
 		end

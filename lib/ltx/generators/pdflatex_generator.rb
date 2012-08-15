@@ -9,7 +9,6 @@ module Ltx::Generators
 		end
 
 		def initialize(document, options={})
-			raise "document can't be nil" if document.nil?
 			@document = document
 			@modules = find_modules
 		end
