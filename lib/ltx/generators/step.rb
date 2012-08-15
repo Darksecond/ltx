@@ -23,14 +23,14 @@ module Ltx::Generators
 			@modules = options.fetch :modules
 			@document = document
 
-			info self, "Step, generation: #{@generation}"
+			info "Step, generation: #{@generation}"
 		end
 
 		def begin
 			@modules.each do |mod|
 				mod.begin_chain(self)
 			end
-			info self, "Running Begin chain on all modules"
+			info "Running Begin chain on all modules"
 		end
 
 		def end
@@ -39,15 +39,14 @@ module Ltx::Generators
 					mod.end_chain(self)
 				end
 			end
-			info self, "Running end chain on all modules"
+			info "Running end chain on all modules"
 		end
 
 		def next_step
-			#run pdflatex_command
 			#TODO move this into a (special case) module?
 			latex = Ltx::Commands::PdflatexCommand.new(@document)
 			latex.execute
-			info self, "Executing Pdflatex"
+			info "Executing Pdflatex"
 			@rerun = latex.rerun_needed?
 			#retrack files
 			update_trackers

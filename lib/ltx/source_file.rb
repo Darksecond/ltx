@@ -3,14 +3,14 @@ require 'digest/md5'
 
 module Ltx
 	class SourceFile
-		def self.for(file, force=false)
+		def self.for(file)
 			case file.partition(".").last
 				when "log"
-					LogSourceFile.new file, force
+					LogSourceFile.new file
 				when "aux"
-					AuxSourceFile.new file, force
+					AuxSourceFile.new file
 				else
-					SourceFile.new file, force
+					SourceFile.new file
 			end
 		end
 

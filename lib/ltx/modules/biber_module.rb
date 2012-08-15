@@ -40,7 +40,7 @@ module Ltx::Modules
 		def post_compile(step)
 			cmd = Ltx::Commands::BiberCommand.new(@document.primary)
 			cmd.execute
-			info self, "Executing Biber"
+			info "Executing Biber"
 
 			step.rerun
 		end

@@ -23,7 +23,7 @@ module Ltx::Modules
 		def post_compile(step)
 			gloss = Ltx::Commands::MakeglossariesCommand.new(@document.primary)
 			gloss.execute
-			info self, "Executing makeglossaries"
+			info "Executing makeglossaries"
 
 			step.rerun
 		end

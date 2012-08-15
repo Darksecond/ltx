@@ -51,16 +51,20 @@ module Ltx
 			@directories.each &:rescan
 		end
 
-		def compile
+		def chain
 			[
 			Generators::PdflatexGenerator.maybe?(self)
-			].compact.each &:generate
+			].compact
+		end
+
+		def compile
+			chain.each &:generate
+		rescue
+			#an error has occured during compile
 		end
 		
 		def clean(full=false)
-			[
-			Generators::PdflatexGenerator.maybe?(self)
-			].compact.each do |gen|
+			chain.each do |gen|
 				gen.clean(full)
 			end
 		end

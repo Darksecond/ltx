@@ -15,19 +15,21 @@ module Ltx::Generators
 		end
 		
 		def generate
-			info self, "Starting"
+			info "Starting"
 			current_step = Step.new @document, {modules: @modules}
 
 			current_step.begin
 
 			while current_step.rerun?
-				#TODO warn or error or fatal here?
-				raise "generation got too large: #{current_step.generation}" if current_step.generation > 10
+				if current_step.generation > 10
+					error "Generation larger than maximum (10): #{current_step.generation}"
+					raise "Generation larger than maximum (10): #{current_step.generation}"
+				end
 				current_step = current_step.next_step
 			end
 
 			current_step.end
-			info self, "Finished"
+			info "Finished"
 			current_step
 		end
 

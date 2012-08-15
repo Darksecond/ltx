@@ -36,20 +36,28 @@ module Ltx
 			@@logger ||= Logger.new STDOUT #replace with variable to stdout or file?
 		end
 
-		def debug(who, what)
-			logger.debug who.class.to_s + " - " + what
+		def debug(what)
+			logger.debug pretty_class + " - " + what
 		end
 
-		def info(who, what)
-			logger.info who.class.to_s + " - " + what
+		def info(what)
+			logger.info pretty_class + " - " + what
 		end
 
-		def warn(who, what)
-			logger.warn who.class.to_s + " - " + what
+		def warn(what)
+			logger.warn pretty_class + " - " + what
 		end
 
-		def error(who, what)
-			logger.error who.class.to_s + " - " + what
+		def error(what)
+			logger.error pretty_class + " - " + what
+		end
+
+		private
+
+		def pretty_class
+			pretty = self.class.to_s
+			pretty.sub! "Ltx::", ""
+			pretty
 		end
 	end
 end
