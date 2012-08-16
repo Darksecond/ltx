@@ -22,6 +22,7 @@ module Ltx
 			if force && selected == nil
 				selected = SourceFile.for "#{base}.#{type}"
 			end
+			selected.source= self if selected.respond_to? :source=
 			selected
 		end
 
@@ -58,7 +59,11 @@ module Ltx
 
 		def find_files
 			files = Dir.glob("#{base}.*")
-			files.map { |sec| SourceFile.for sec }
+			files.map { |sec| 
+				SourceFile.for(sec).tap do |s|
+					s.source= self if s.respond_to? :source=
+				end
+			}
 		end
 	end
 end

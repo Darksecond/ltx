@@ -1,1 +1,4 @@
-* add chapters.tex and appendices.tex generator
+* Source -> SourceFile.source=
+* MltxSourceFile (DSL -> Manifest)
+* Manifest
+* PltxSourceFile (DSL -> Document)

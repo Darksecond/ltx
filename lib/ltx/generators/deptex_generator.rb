@@ -19,7 +19,7 @@ module Ltx::Generators
 				dirs.each do |d|
 					output += d.find_by_type("tex").map { |s| "\\#{v.to_s}{#{s.base}}" }
 				end
-				File.open @document.directory("primary").first.find_by_base(k,true).file("tex", true), "w" do |f|
+				File.open @document.directory("primary").first.find_by_base(k,true).file("tex", true).file, "w" do |f|
 					output.each { |o| f.puts o }
 				end
 			end

@@ -3,18 +3,22 @@ require 'digest/md5'
 
 module Ltx
 	class SourceFile
-		def self.for(file)
-			case file.partition(".").last
+		def self.for(file, ext=nil)
+			case new(file, ext).extension
 				when "log"
 					LogSourceFile.new file
 				when "aux"
 					AuxSourceFile.new file
+				when "pltx"
+					PltxSourceFile.new file
+				when "mltx"
+					MltxSourceFile.new file
 				else
 					SourceFile.new file
 			end
 		end
 
-		def initialize(file, ext=nil) #TODO ext?, force? huh?!?
+		def initialize(file, ext=nil)
 			@file = file.to_s
 			if extension == "" && ext
 				@file += ".#{ext}"

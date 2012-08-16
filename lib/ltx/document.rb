@@ -12,26 +12,8 @@ module Ltx
 		end
 	end
 
-	#TODO move to seperate file
-	module BibliographyDocumentExtension
-		def bibliography?
-			@bibtex || false
-		end
-
-		def bibliography(file=nil)
-			@bibtex_files ||= [] unless file.nil?
-			@bibtex_files << file unless file.nil?
-			@bibtex = true
-		end
-
-		def bibliographies
-			@bibtex_files || [primary.file("bib",true)]
-		end
-	end
-
 	class Document
 		include GlossaryDocumentExtension
-		include BibliographyDocumentExtension
 		
 		# Public: Create a new document.
 		#
@@ -42,8 +24,12 @@ module Ltx
 		def initialize(primary, options={})
 			raise "primary can't be nil" if primary.nil?
 			@primary = Source.new(primary, type: "primary")
-			options = {directories: default_dirs}.merge(options)
-			@directories = options.fetch :directories
+			@options = {
+				directories: default_dirs,
+				bibliographies: [],
+				glossary: false
+			}.merge(options)
+			@directories = option :directories
 		end
 
 		def rescan
@@ -100,6 +86,27 @@ module Ltx
 
 		def inspect
 			"<@primary => #{primary.inspect}, @directories => #{directories.inspect}>"
+		end
+
+		def set_option(key, value)
+			@options[key] = value
+		end
+
+		def option(key, default=nil)
+			#TODO handle default better
+			begin
+				@options.fetch key
+			rescue
+				@options[key] = default
+			end
+		end
+
+		def options
+			@options
+		end
+
+		def option?(key)
+			@options.has_key? key
 		end
 
 		private

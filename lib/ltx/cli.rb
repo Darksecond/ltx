@@ -33,7 +33,7 @@ module Ltx
 				exit 1
 			end
 			#parse project
-			Ltx::DSL.eval project
+			PltxSourceFile.new(project).documents
 		end
 	end
 end

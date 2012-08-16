@@ -5,8 +5,8 @@ module Ltx::Modules
 		include Ltx::Log
 
 		def self.maybe?(document)
-			if document.bibliography?
-				new document, document.bibliographies
+			if document.option? (:bibliographies)
+				new(document, document.option(:bibliographies))
 			else
 				nil
 			end
